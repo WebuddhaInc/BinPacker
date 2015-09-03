@@ -1,0 +1,60 @@
+<?php
+
+namespace WebuddhaInc\BinPacker;
+
+class Params {
+
+  public function __construct(){
+    $args = func_get_args();
+    if( $args ){
+      foreach( $args AS $arg ){
+        if( is_object($arg) || is_array($arg) )
+          foreach($arg AS $key => $val )
+            $this->set( $key, $val );
+      }
+    }
+  }
+
+  public function &get( $key, $def=null ){
+    $keyChain = explode('.',$key);
+    $value =& $this;
+    foreach( $keyChain AS $keyStep )
+      if( isset($value->{$keyStep}) )
+        $value =& $value->{$keyStep};
+      else
+        return $def;
+    return $value;
+  }
+
+  public function &set( $key, $val=null ){
+    $keyChain = explode('.',$key);
+    $value =& $this;
+    for($i=0;$i<count($keyChain);$i++){
+      if( !trim($keyChain[$i]) )return false;
+      if( $i < count($keyChain)-1 ){
+        if( !isset($value->{$keyChain[$i]}) )
+          $value->{$keyChain[$i]} = new stdClass();
+        $value =& $value->{$keyChain[$i]};
+      } else if(is_string($val) && in_array(strtolower($val),array('true','false')))
+        $value->{$keyChain[$i]} = (bool)preg_match('/true/i',$val);
+      else
+        $value->{$keyChain[$i]} = $val;
+    }
+    return $this;
+  }
+
+  public function &add( $key, $addValue ){
+    $value = $this->get( $key );
+    if( is_numeric($value) ){
+      $this->set( $key, $value + (real)$addValue );
+    }
+    else if( is_string($value) ){
+      $this->set( $key, $value . (string)$addValue );
+    }
+    else if( is_array($value) ){
+      $this->set( $key, array_merge($value, (is_array($addValue) ? $addValue : array($addValue))) );
+    }
+    return $this;
+  }
+
+}
