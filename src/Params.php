@@ -4,17 +4,34 @@ namespace WebuddhaInc\BinPacker;
 
 class Params {
 
+  /**
+   * [__construct description]
+   */
   public function __construct(){
     $args = func_get_args();
     if( $args ){
       foreach( $args AS $arg ){
-        if( is_object($arg) || is_array($arg) )
-          foreach($arg AS $key => $val )
-            $this->set( $key, $val );
+        if( is_object($arg) || is_array($arg) ){
+          $this->merge( $arg );
+        }
       }
     }
+    $this->validate();
   }
 
+  /**
+   * [validate description]
+   * @return [type] [description]
+   */
+  public function validate(){
+  }
+
+  /**
+   * [get description]
+   * @param  [type] $key [description]
+   * @param  [type] $def [description]
+   * @return [type]      [description]
+   */
   public function &get( $key, $def=null ){
     $keyChain = explode('.',$key);
     $value =& $this;
@@ -26,6 +43,11 @@ class Params {
     return $value;
   }
 
+  /**
+   * [set description]
+   * @param [type] $key [description]
+   * @param [type] $val [description]
+   */
   public function &set( $key, $val=null ){
     $keyChain = explode('.',$key);
     $value =& $this;
@@ -43,6 +65,11 @@ class Params {
     return $this;
   }
 
+  /**
+   * [add description]
+   * @param [type] $key      [description]
+   * @param [type] $addValue [description]
+   */
   public function &add( $key, $addValue ){
     $value = $this->get( $key );
     if( is_numeric($value) ){
@@ -55,6 +82,17 @@ class Params {
       $this->set( $key, array_merge($value, (is_array($addValue) ? $addValue : array($addValue))) );
     }
     return $this;
+  }
+
+  /**
+   * [merge description]
+   * @param  [type] $data [description]
+   * @return [type]       [description]
+   */
+  public function merge( $data ){
+    foreach( $data AS $key => $val ){
+      $this->set( $key, $val );
+    }
   }
 
 }

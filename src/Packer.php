@@ -56,61 +56,12 @@ class Packer {
         'weight'      => null
         ), $data );
 
-    // Quantity
-      $itemQuantity = (real)$item->get('quantity', 1.0);
-
-    // Volume
-      $itemVolumeUnit = strtoupper($item->get( 'volume_unit', 'IN' ));
-      switch( $itemVolumeUnit ){
-        case 'CM':
-          $itemVolumeUnit = 'IN';
-          $itemVolumeModifier = 0.3937008;
-          break;
-        default:
-          $itemVolumeUnit = 'IN';
-          $itemVolumeModifier = 1;
-          break;
-      }
-      $itemWidth  = (real)$item->get('width', 0.0) * $itemVolumeModifier;
-      $itemHeight = (real)$item->get('height', 0.0) * $itemVolumeModifier;
-      $itemLength = (real)$item->get('length', 0.0) * $itemVolumeModifier;
-      if( (real)$item->get('volume', 0.0) ){
-        $itemVolume = (real)$item->get('volume', 0.0) * $itemVolumeModifier;
-      }
-      else {
-        $itemVolume = ($itemWidth * $itemHeight * $itemLength);
-      }
-
-    // Weight
-      $itemWeightUnit = strtoupper($item->get('weight_unit', 'LB'));
-      switch( $itemWeightUnit ){
-        case 'KG':
-          $itemWeightUnit = 'LB';
-          $itemWeightModifier = 2.20462;
-          break;
-        case 'OZ':
-          $itemWeightUnit = 'LB';
-          $itemWeightModifier = 0.0625;
-          break;
-        default:
-          $itemWeightUnit = 'LB';
-          $itemWeightModifier = 1;
-          break;
-      }
-      $itemWeight = (real)$item->get('weight') * $itemWeightModifier;
-
     // Push onto stack
-      for( $i=0; $i<$itemQuantity; $i++ ){
-        $this->items[] = new Item( (array)$item, array(
-          'quantity'    => 1,
-          'volume_unit' => $itemVolumeUnit,
-          'volume'      => round($itemVolume, 2, PHP_ROUND_HALF_DOWN),
-          'width'       => round($itemWidth, 2, PHP_ROUND_HALF_DOWN),
-          'height'      => round($itemHeight, 2, PHP_ROUND_HALF_DOWN),
-          'length'      => round($itemLength, 2, PHP_ROUND_HALF_DOWN),
-          'weight_unit' => $itemWeightUnit,
-          'weight'      => round($itemWeight, 2, PHP_ROUND_HALF_DOWN)
-          ));
+      for( $i=0; $i<$item->get('quantity'); $i++ ){
+        $this->items[] = new Item(
+          (array)$item,
+          array('quantity' => 1)
+          );
       }
 
   }
@@ -140,57 +91,8 @@ class Packer {
         'weight'           => null
         ), $data );
 
-    // Prepare Volume
-      $packageVolumeUnit = strtoupper($packageOption->get('volume_unit', 'IN'));
-      switch( $packageVolumeUnit ){
-        case 'CM':
-          $packageVolumeUnit = 'IN';
-          $packageVolumeModifier = 0.3937008;
-          break;
-        default:
-          $packageVolumeUnit = 'IN';
-          $packageVolumeModifier = 1;
-          break;
-      }
-      $packageWidth  = (real)$packageOption->get('width', 0.0) * $packageVolumeModifier;
-      $packageHeight = (real)$packageOption->get('height', 0.0) * $packageVolumeModifier;
-      $packageLength = (real)$packageOption->get('length', 0.0) * $packageVolumeModifier;
-      if( $packageWidth && $packageHeight && $packageLength ){
-        $packageVolume = ($packageWidth * $packageHeight * $packageLength);
-      }
-      else if( (real)$packageOption->get('volume', 0.0) ){
-        $packageVolume = (real)$packageOption->get('volume', 0.0) * $packageVolumeModifier;
-        $packageWidth = $packageHeight = $packageLength = sqrt( $packageVolume );
-      }
-
-    // Prepare Weight
-      $packageWeightUnit = strtoupper($packageOption->get('weight_unit', 'LB'));
-      switch( $packageWeightUnit ){
-        case 'KG':
-          $packageWeightUnit = 'LB';
-          $packageWeightModifier = 2.20462;
-          break;
-        case 'OZ':
-          $packageWeightUnit = 'LB';
-          $packageWeightModifier = 0.0625;
-          break;
-        default:
-          $packageWeightUnit = 'LB';
-          $packageWeightModifier = 1;
-          break;
-      }
-      $packageWeight = (real)$packageOption->get('weight') * $packageWeightModifier;
-
     // Push onto Stack
-      $this->packageOptions[] = new PackageOption( (array)$packageOption, array(
-        'volume_unit' => $packageVolumeUnit,
-        'volume'      => round($packageVolume, 2, PHP_ROUND_HALF_DOWN),
-        'width'       => round($packageWidth, 2, PHP_ROUND_HALF_DOWN),
-        'height'      => round($packageHeight, 2, PHP_ROUND_HALF_DOWN),
-        'length'      => round($packageLength, 2, PHP_ROUND_HALF_DOWN),
-        'weight_unit' => $packageWeightUnit,
-        'weight'      => round($packageWeight, 2, PHP_ROUND_HALF_DOWN)
-        ));
+      $this->packageOptions[] = $packageOption;
 
   }
 
