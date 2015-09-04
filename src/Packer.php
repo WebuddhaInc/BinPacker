@@ -144,6 +144,11 @@ class Packer {
             $this->_sortPackagedBoxes( $packageBoxes );
             foreach( $packedBoxes AS $packageKey => $package ){
               if( $item->get('weight') <= ($package->get('weight') - $package->get('weight_used')) ){
+
+                /**
+                 * This is a 2D evaluating only
+                 */
+
                 if(
                   $item->get('width') <= ($package->get('width') - $package->get('width_used'))
                   && $item->get('height') <= ($package->get('height') - $package->get('height_used'))
