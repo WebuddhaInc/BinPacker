@@ -119,7 +119,7 @@ class Packer {
   }
 
   /**
-   * [getBasicVolumePackages description]
+   * [getPackages description]
    * @return [type] [description]
    */
   public function getPackages(){
@@ -237,10 +237,75 @@ class Packer {
   }
 
   /**
-   * [getBasicVolumePackages description]
+   * [getVolumePackages description]
    * @return [type] [description]
    */
   public function getVolumePackages(){
+
+    /**
+     * Storage
+     */
+      $packedBoxes          = array();
+      $items                = $this->getItems();
+      $packageOptions       = $this->getPackageOptions();
+
+    /**
+     * Loop and Pack
+     */
+      do {
+
+        $package_found = false;
+        $this->_sortItems( $items );
+        foreach( $items AS $itemKey => $item ){
+
+          // Existing Package
+            $this->_sortPackagedBoxes( $packageBoxes );
+            foreach( $packedBoxes AS $packageKey => $package ){
+              if( $item->get('weight') <= ($package->get('weight') - $package->get('weight_used')) ){
+                $package->add('volume_used', ($item->get('width') * $item->get('height') * $item->get('length')));
+                $package->add('weight_used', $item->get('weight'));
+                $package->add('items_packed', $item);
+                $package_found = true;
+              }
+            }
+
+          // New Package
+            if( !$package_found ){
+              foreach( $packageOptions AS $packageKey => $package ){
+                if( $item->get('weight') <= $package->get('weight') ){
+                  $new_package = new Package($package);
+                  $new_package->set('volume_used', ($item->get('width') * $item->get('height') * $item->get('length')));
+                  $new_package->set('weight_used', $item->get('weight'));
+                  $new_package->set('items_packed', array($item));
+                  $packedBoxes[] = $new_package;
+                  $package_found = true;
+                  break;
+                }
+              }
+            }
+
+          // Remove Item
+            if( $package_found ){
+              unset( $items[ $itemKey ] );
+              break;
+            }
+
+        }
+
+      } while( $package_found );
+
+    /**
+     * Complete
+     */
+      return $packedBoxes;
+
+  }
+
+  /**
+   * [getVolumePackagesByGross description]
+   * @return [type] [description]
+   */
+  public function getVolumePackagesByGross(){
 
     /**
      * Storage
