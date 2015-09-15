@@ -75,6 +75,30 @@ class Packer {
   }
 
   /**
+   * [getItemsTotalWeight description]
+   * @return [type] [description]
+   */
+  public function getItemsTotalWeight(){
+    $totalWeight = 0;
+    foreach( $this->getItems() AS $itemKey => $item ){
+      $totalWeight += $item->get('weight');
+    }
+    return $totalWeight;
+  }
+
+  /**
+   * [getItemsTotalVolume description]
+   * @return [type] [description]
+   */
+  public function getItemsTotalVolume(){
+    $totalVolume = 0;
+    foreach( $this->getItems() AS $itemKey => $item ){
+      $totalVolume += $item->get('volume');
+    }
+    return $totalVolume;
+  }
+
+  /**
    * [addPackageOption description]
    * @param [type] $data [description]
    */
