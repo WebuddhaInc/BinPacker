@@ -73,7 +73,7 @@ class Params {
   public function &add( $key, $addValue ){
     $value = $this->get( $key );
     if( is_numeric($value) ){
-      $this->set( $key, $value + (real)$addValue );
+      $this->set( $key, $value + (float)$addValue );
     }
     else if( is_string($value) ){
       $this->set( $key, $value . (string)$addValue );

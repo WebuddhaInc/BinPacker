@@ -18,14 +18,14 @@ class PackageOption extends Params {
           $packageVolumeModifier = 1;
           break;
       }
-      $packageWidth  = (real)$this->get('width', 0.0) * $packageVolumeModifier;
-      $packageHeight = (real)$this->get('height', 0.0) * $packageVolumeModifier;
-      $packageLength = (real)$this->get('length', 0.0) * $packageVolumeModifier;
+      $packageWidth  = (float)$this->get('width', 0.0) * $packageVolumeModifier;
+      $packageHeight = (float)$this->get('height', 0.0) * $packageVolumeModifier;
+      $packageLength = (float)$this->get('length', 0.0) * $packageVolumeModifier;
       if( $packageWidth && $packageHeight && $packageLength ){
         $packageVolume = ($packageWidth * $packageHeight * $packageLength);
       }
-      else if( (real)$this->get('volume', 0.0) ){
-        $packageVolume = (real)$this->get('volume', 0.0) * $packageVolumeModifier;
+      else if( (float)$this->get('volume', 0.0) ){
+        $packageVolume = (float)$this->get('volume', 0.0) * $packageVolumeModifier;
         $packageWidth = $packageHeight = $packageLength = sqrt( $packageVolume );
       }
 
@@ -45,7 +45,7 @@ class PackageOption extends Params {
           $packageWeightModifier = 1;
           break;
       }
-      $packageWeight = (real)$this->get('weight') * $packageWeightModifier;
+      $packageWeight = (float)$this->get('weight') * $packageWeightModifier;
 
     // Push onto Stack
       $this->merge(array(

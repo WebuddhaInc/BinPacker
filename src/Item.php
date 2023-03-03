@@ -7,7 +7,7 @@ class Item extends Params {
   public function validate(){
 
     // Quantity
-      $itemQuantity = (real)$this->get('quantity', 1.0);
+      $itemQuantity = (float)$this->get('quantity', 1.0);
 
     // Volume
       $itemVolumeUnit = strtoupper($this->get( 'volume_unit', 'IN' ));
@@ -21,11 +21,11 @@ class Item extends Params {
           $itemVolumeModifier = 1;
           break;
       }
-      $itemWidth  = (real)$this->get('width', 0.0) * $itemVolumeModifier;
-      $itemHeight = (real)$this->get('height', 0.0) * $itemVolumeModifier;
-      $itemLength = (real)$this->get('length', 0.0) * $itemVolumeModifier;
-      if( (real)$this->get('volume', 0.0) ){
-        $itemVolume = (real)$this->get('volume', 0.0) * $itemVolumeModifier;
+      $itemWidth  = (float)$this->get('width', 0.0) * $itemVolumeModifier;
+      $itemHeight = (float)$this->get('height', 0.0) * $itemVolumeModifier;
+      $itemLength = (float)$this->get('length', 0.0) * $itemVolumeModifier;
+      if( (float)$this->get('volume', 0.0) ){
+        $itemVolume = (float)$this->get('volume', 0.0) * $itemVolumeModifier;
       }
       else {
         $itemVolume = ($itemWidth * $itemHeight * $itemLength);
@@ -47,7 +47,7 @@ class Item extends Params {
           $itemWeightModifier = 1;
           break;
       }
-      $itemWeight = (real)$this->get('weight') * $itemWeightModifier;
+      $itemWeight = (float)$this->get('weight') * $itemWeightModifier;
 
     // Apply Validated
       $this->merge(array(
